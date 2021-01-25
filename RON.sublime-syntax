@@ -38,7 +38,7 @@ contexts:
         - match: \*/
           pop: true
     - match: (//).*$\n?
-      scope: comment.line.double-slash.js
+      scope: comment.line.double-slash.ron
       captures:
         1: punctuation.definition.comment.ron
   constant:
