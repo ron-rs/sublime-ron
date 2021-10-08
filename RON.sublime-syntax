@@ -8,9 +8,8 @@ contexts:
   main:
     # extensions
     - match: '\#\!'
-      push:
-        - include: extension
-    - include: main # recurse in case of more extensions
+    - include: extension
+    - include: value # recurse in case of more extensions
   extension:
     - match: '\['
       scope: punctuation.section.array.begin.ron
