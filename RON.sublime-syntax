@@ -56,18 +56,21 @@ contexts:
       scope: punctuation.definition.comment.ron
       push:
         - meta_scope: comment.block.documentation.ron
-        - match: \*/
-          pop: true
+        - include: block_comment
     - match: /\*
       scope: punctuation.definition.comment.ron
       push:
         - meta_scope: comment.block.ron
-        - match: \*/
-          pop: true
+        - include: block_comment
     - match: (//).*$\n?
       scope: comment.line.double-slash.ron
       captures:
         1: punctuation.definition.comment.ron
+  block_comment:
+    - match: \*/
+      pop: true
+    - match: /\*
+      push: block_comment
   constant:
     - match: \b(true|false)\b
       scope: constant.language.ron
