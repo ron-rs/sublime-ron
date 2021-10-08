@@ -9,8 +9,36 @@ contexts:
     # extensions
     - match: '\#\!'
       push:
-        - include: array
+        - include: extension
     - include: main # recurse in case of more extensions
+  extension:
+    - match: '\['
+      scope: punctuation.section.array.begin.ron
+      push:
+        - meta_scope: meta.structure.array.ron
+        - match: '\]'
+          scope: punctuation.section.array.end.ron
+          pop: true
+        - include: extension_inner
+        - match: ','
+          scope: punctuation.separator.array.ron
+        - match: '[^\s\]]'
+          scope: invalid.illegal.expected-array-separator.ron
+  extension_inner:
+    - match: 'enable\('
+      push:
+        - meta_scope: meta.structure.entity.ron
+        - match: '\)'
+          scope: punctuation.section.entity.end.ron
+          pop: true
+        - include: extension_name
+        - match: ','
+          scope: punctuation.separator.entity.ron
+  extension_name:
+    - match: 'unwrap_newtypes'
+      scope: entity.name.tag.ron
+    - match: 'implicit_some'
+      scope: entity.name.tag.ron
   array:
     - match: '\['
       scope: punctuation.section.array.begin.ron
