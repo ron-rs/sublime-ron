@@ -156,9 +156,23 @@ contexts:
       scope: constant.character.escape.ron
     - match: \\.
       scope: invalid.illegal.unrecognized-string-escape.ron
+  raw_string:
+    - match: 'r'
+    - include: raw_string_inner
+  raw_string_inner:
+    - match: '#'
+      push:
+      - match: '"'
+        scope: punctuation.definition.string.begin.ron
+      - meta_scope: string.quoted.double.ron
+      - match: '"'
+        scope: punctuation.definition.string.end.ron
+      - match: '#'
+        pop: true
   value:
     - include: constant
     - include: number
+    - include: raw_string
     - include: string
     - include: array
     - include: dictionary
