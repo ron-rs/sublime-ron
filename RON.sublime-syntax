@@ -10,7 +10,7 @@ contexts:
     - match: '\#\!'
       push:
         - include: array
-    - include: value
+    - include: main # recurse in case of more extensions
   array:
     - match: '\['
       scope: punctuation.section.array.begin.ron
