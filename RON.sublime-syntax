@@ -6,12 +6,10 @@ file_extensions:
 scope: source.ron
 contexts:
   main:
-    # extensions
-    - match: '\#\!'
     - include: extension
-    - include: value # recurse in case of more extensions
+    - include: value
   extension:
-    - match: '\['
+    - match: '\#\!\['
       scope: punctuation.section.array.begin.ron
       push:
         - meta_scope: meta.structure.array.ron
