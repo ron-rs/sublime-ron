@@ -158,14 +158,13 @@ contexts:
     - match: 'r'
     - include: raw_string_inner
   raw_string_inner:
-    - match: '#'
+    - match: '(#*)"'
+      captures:
+        1: punctuation.definition.string.begin.ron
       push:
-      - match: '"'
-        scope: punctuation.definition.string.begin.ron
       - meta_scope: string.quoted.double.ron
-      - match: '"'
+      - match: '"\1'
         scope: punctuation.definition.string.end.ron
-      - match: '#'
         pop: true
   value:
     - include: constant
