@@ -3,6 +3,7 @@
 name: RON
 file_extensions:
   - ron
+version: 2
 scope: source.ron
 contexts:
   main:
