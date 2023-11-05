@@ -1,0 +1,13 @@
+name:  RON Comments
+scope: source.ron
+uuid:  "ad16fbed-0fa4-4e9b-b4ed-d4c080d41468"
+settings:
+  shellVariables:
+  - name:  TM_COMMENT_START
+    value: '// '
+  - name:  TM_COMMENT_DISABLE_INDENT # Disable indent for TM_COMMENT_START → add comment marker @ line start
+    value: 'no'
+  - name:  TM_COMMENT_START_2
+    value: '/* '
+  - name:  TM_COMMENT_END_2
+    value: ' */'
