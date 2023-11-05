@@ -5,6 +5,9 @@ file_extensions:
   - ron
 version: 2
 scope: source.ron
+variables: # from RustEnhanced
+  non_raw_ident: '[[:alpha:]][_[:alnum:]]*|_[_[:alnum:]]+'
+  identifier: '(?:(?:(?:r\#)?{{non_raw_ident}})\b)' # include a word boundary at the end to ensure all possible characters are consumed, to prevent catastrophic backtracking
 contexts:
   main:
     - include: extension
@@ -107,7 +110,7 @@ contexts:
         - match: '\)'
           scope: punctuation.section.dictionary.end.ron
           pop: true
-        - match: '[a-z_][A-Za-z_0-9]*'
+        - match: '[a-z_][A-Za-z_0-9]*(?!#")'
           scope: entity.name.tag.ron
         - match: '\:'
           scope: punctuation.separator.dictionary.key-value.ron
@@ -155,22 +158,42 @@ contexts:
       scope: constant.character.escape.ron
     - match: \\.
       scope: invalid.illegal.unrecognized-string-escape.ron
-  raw_string:
-    - match: 'r'
-    - include: raw_string_inner
-  raw_string_inner:
-    - match: '(#*)"'
+  format-raw-string: # from RustEnhanced
+    - match: (r)(#*)"
       captures:
-        1: punctuation.definition.string.begin.ron
+        1: storage.type.string.ron
+        2: punctuation.definition.string.begin.ron
       push:
-      - meta_scope: string.quoted.double.ron
-      - match: '"\1'
-        scope: punctuation.definition.string.end.ron
-        pop: true
+        - meta_include_prototype: false
+        - meta_scope: string.quoted.double.raw.ron
+        - match     : '"\2'
+          scope     : punctuation.definition.string.end.ron
+          pop       : true
+        - include   : format-escapes
+  format-escapes:
+    - match: '\{\{|\}\}'
+      scope: constant.character.escape.ron
+    - match: |-
+        (?x)                      # Spec from http://doc.rust-lang.org/std/fmt/
+        \{
+          (\d+|{{identifier}})?
+          (
+            :                     # format_spec delimiter
+            (.?[<>^])?            # [[fill]align]
+            [+-]?                 # [sign]
+            \#?                   # ['#']
+            0?                    # [0]
+            (\d+\$?)?             # [width]
+            (\.(\d+\$?|\*)?)?     # ['.' precision]
+            (\?|{{identifier}})?  # [type]
+          )?
+        \}
+      scope: constant.other.placeholder.ron
+
   value:
     - include: constant
     - include: number
-    - include: raw_string
+    - include: format-raw-string
     - include: string
     - include: array
     - include: dictionary
